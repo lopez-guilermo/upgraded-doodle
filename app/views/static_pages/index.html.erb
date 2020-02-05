@@ -1,6 +1,6 @@
 <section class="bucketlistapp">
   <header class="header">
-    <h1>todos</h1>
+    <h1>bucketlist</h1>
     <form id="new form">
     	<input type="text" class="new-bucketlist" />
     </form>
@@ -20,7 +20,15 @@
   	$('#new-form').submit(function(event) {
   		event.preventDefault();
   		var textbook = $('.new-bucketlist');
-  		console.log("Task:", textbox.val());
+  		var payload = {
+        task: {
+          title: textbox.val()
+        }
+      };
+      $.post("/tasks", payload).success(function(data) {
+        console.log("Successful HTTP Request");
+      });
+
   	});
     // The taskHtml method takes in a JavaScript representation
     // of the task and produces an HTML representation using
