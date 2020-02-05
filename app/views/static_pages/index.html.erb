@@ -1,53 +1,66 @@
 <section class="bucketlistapp">
   <header class="header">
-    <h1>bucketlist</h1>
+    <h1>todos</h1>
   </header>
 
   <section class="main">
-  	<ul class="bucketlist-list">
-  	</ul>
+    <ul class="bucketlist-list">
 
+    </ul>
   </section>
 </section>
 
+
 <script>
-	$(function() {
-		$.get("/tasks").success( function( data ) {
-			var htmlString = "";
-			$.each(data, function(index, task){
-				 var checkedStatus = task.done ? "checked" : "";
-				 var liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
-				 " datd-id='" + task.id + "'" +
-				 checkedStatus +
-				  '><label>' +
-				  task.title +
-				  '</label></div></li>';
-				  htmlString += liElement;
-				
-			     });
-			var ulbucketlist = $('.bucketlist-list');
-			ulbucketlist.html(htmlString);
+  $(function() {
+    // The taskHtml method takes in a JavaScript representation
+    // of the task and produces an HTML representation using
+    // <li> tags
+    function taskHtml(task) {
+      var checkedStatus = task.done ? "checked" : "";
+      var liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
+        " data-id='" + task.id + "'" +
+        checkedStatus +
+        '><label>' +
+         task.title +
+         '</label></div></li>';
 
-			$('.toggle').change(function(e) {
-				var itemId = $(e.target).data("id");
-				console.log(itemId);
+      return liElement;
+    }
 
-				var doneValue = Boolean($(e.target).is('checked'));
-				console.log("done:", doneValue);
+    // toggleTask takes in an HTML representation of
+    // an event that fires from an HTML representation of
+    // the toggle checkbox and  performs an API request to toggle
+    // the value of the `done` field
+    function toggleTask(e) {
+      var itemId = $(e.target).data("id");
+      
 
-				 $.post("/tasks/" + itemId, {
-				  _method: "PUT"
-				  task: {
-				  done: doneValue
-				  }
-				});
-          
-        
-			});
-		});
-	});
-</script>	
-	
+      var doneValue = Boolean($(e.target).is(':checked'));
+      
+
+      $.post("/tasks/" + itemId, {
+        _method: "PUT",
+        task: {
+          done: doneValue
+        }
+      });
+    }
+
+    $.get("/tasks").success( function( data ) {
+      var htmlString = "";
+
+      $.each(data, function(index,  task) {
+        htmlString += taskHtml(task);
+      });
+      var ulbucketlist = $('.bucketlist-list');
+      ulTodos.html(htmlString);
+
+      $('.toggle').change(toggleTask);
+
+    });
+  });
+</script>
 	
 
 
