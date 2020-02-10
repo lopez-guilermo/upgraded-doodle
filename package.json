@@ -1,5 +1,7 @@
 {
   "name": "bucketlist",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "jquery": "^3.4.1"
+  }
 }
